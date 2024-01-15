@@ -1,6 +1,6 @@
-package com.example.ComunicateFriends.Controllers;
+package com.example.ComunicateFriends.controllers;
 
-import com.example.ComunicateFriends.Models.TaskTable;
+import com.example.ComunicateFriends.models.TaskTable;
 import com.example.ComunicateFriends.repo.TaskTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,5 +43,32 @@ public class CheckController {
         task.ifPresent(res::add);
         model.addAttribute("task",res);
         return "task-details";
+    }
+    @GetMapping("/task/{id}/edit")
+    public String TaskEdit(@PathVariable(value = "id") long id, Model model){
+        if (!taskTableRepository.existsById(id)){
+            return "redirect:/task";
+        }
+        Optional<TaskTable> task = taskTableRepository.findById(id);
+        ArrayList<TaskTable> res = new ArrayList<>();
+        task.ifPresent(res::add);
+        model.addAttribute("task",res);
+        return "task-edit";
+    }
+    @PostMapping("/task/{id}/edit")
+    public String task_Update(@PathVariable(value = "id") long id, @RequestParam String title,@RequestParam String namedCompany,@RequestParam String fullText,@RequestParam String deadline, Model model) {
+        TaskTable taskTable = taskTableRepository.findById(id).orElseThrow();
+        taskTable.setTitle(title);
+        taskTable.setFullText(fullText);
+        taskTable.setNamedCompany(namedCompany);
+        taskTable.setDeadline(deadline);
+        taskTableRepository.save(taskTable);
+        return "redirect:/task";
+    }
+        @PostMapping("/task/{id}/remove")
+        public String task_Delete(@PathVariable(value = "id") long id, Model model){
+            TaskTable taskTable = taskTableRepository.findById(id).orElseThrow();
+            taskTableRepository.delete(taskTable);
+            return "redirect:/task";
     }
 }

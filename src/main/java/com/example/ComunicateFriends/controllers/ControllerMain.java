@@ -1,4 +1,4 @@
-package com.example.ComunicateFriends.Controllers;
+package com.example.ComunicateFriends.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
